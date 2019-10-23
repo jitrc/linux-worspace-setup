@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# Perform system upgrade via apt
+function auto_install {
+	echo_message title "Driver autoinstall..."
+	# Draw window
+	if (whiptail --title "autoinstall" --yesno "Driver autoinstall?" 8 56) then
+		# Update repository information
+		echo_message info 'autoinstall'
+		# Admin privileges
+		#superuser_do 'apt update -y -qq'
+		#echo_message success 'Repository information updated.'
+		sudo ubuntu-drivers autoinstall
+	else
+		# Cancelled
+		echo_message info "Installation of ${2} cancelled."
+		system_update
+	fi
+}
+
+function ubuntu_drivers_devices {
+	echo_message title "Adding gprahics ppa..."
+	sudo ubuntu-drivers devices
+	system_update
+	
+}
+
+
+function add_gprahics_ppa {
+	echo_message title "Adding gprahics ppa..."
+	sudo add-apt-repository ppa:graphics-drivers/ppa
+	sudo apt update
+	system_update
+	
+}
+
+
+function nvidia_430 {
+	echo_message title "Adding gprahics ppa..."
+	sudo apt install nvidia-driver-430
+	system_update
+	
+}
+
+function nvidia_418 {
+	echo_message title "Adding gprahics ppa..."
+	sudo apt install nvidia-driver-418
+	system_update
+	
+}
+
+function nvidia_390 {
+	echo_message title "Adding gprahics ppa..."
+	sudo apt install nvidia-driver-390
+	system_update
+	
+}
+
+function nvidia_384 {
+	echo_message title "Adding gprahics ppa..."
+	sudo apt install nvidia-384
+	system_update
+	
+}
+
+
+
+# Perform system updates
+function install_drivers {
+	# install
+	echo_message title "Starting Nvidia Grpahics installation..."
+	# Draw window
+	UPDATE=$(eval `resize` && whiptail \
+		--notags \
+		--title "Install $NAME" \
+		--menu "\nWhat ${NAME,,} would you like to install?" \
+		--ok-button "Install" \
+		--cancel-button "Go Back" \
+		$LINES $COLUMNS $(( $LINES - 12 )) \
+		'auto_install'    	'Auto Install Drivers' \
+		'ubuntu_drivers_devices' 'ubuntu_drivers_devices' \
+		'add_gprahics_ppa'      'Add Grpahics PPA' \
+		'nvidia_430'   		'Install nvidia_430' \
+		'nvidia_418'   		'Install nvidia_418' \
+		'nvidia_390'   		'Install nvidia_390' \
+		'nvidia_384'   		'Install nvidia_384' \
+		3>&1 1>&2 2>&3)
+
+	# check exit status
+	if [ $? = 0 ]; then
+		echo_message header "Starting '$UPDATE' function..."
+		$UPDATE
+	else
+		# Cancelled
+		echo_message info "System updates cancelled."
+		main
+	fi
+}
