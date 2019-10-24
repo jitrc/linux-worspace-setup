@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Perform system upgrade via apt
+
 function auto_install {
 	echo_message title "Driver autoinstall..."
 	# Draw window
@@ -65,10 +65,9 @@ function nvidia_384 {
 
 
 
-# Perform system updates
 function install_drivers {
 	# install
-	echo_message title "Starting Nvidia Grpahics installation..."
+	echo_message title "Starting Driver installation..."
 	# Draw window
 	UPDATE=$(eval `resize` && whiptail \
 		--notags \
@@ -92,7 +91,7 @@ function install_drivers {
 		$UPDATE
 	else
 		# Cancelled
-		echo_message info "System updates cancelled."
+		echo_message info "Drivers installation cancelled."
 		main
 	fi
 }
