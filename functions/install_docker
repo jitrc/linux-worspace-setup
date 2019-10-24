@@ -1,0 +1,75 @@
+#!/bin/bash
+
+function docker_install {
+
+	echo_message info 'Installing Docker'
+	sudo apt-get install -y \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		gnupg-agent \
+		software-properties-common
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	sudo add-apt-repository \
+		"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+		$(lsb_release -cs) \
+		stable"
+	sudo apt-get update 
+	sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+	sudo usermod -aG docker $USER
+	newgrp docker
+	sudo systemctl restart docker
+
+
+}
+
+function nvidia_docker_install {
+	distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+	curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+	curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+	sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+	sudo systemctl restart docker
+
+}
+
+function nvidia_docker2_install {
+	distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+	curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+	curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+	sudo apt-get update && sudo apt-get install -y nvidia-docker2
+	sudo systemctl restart docker
+
+}
+
+
+
+
+
+function install_docker {
+	# install
+	echo_message title "Starting Docker installation..."
+	# Draw window
+	UPDATE=$(eval `resize` && whiptail \
+		--notags \
+		--title "Install $NAME" \
+		--menu "\nWhat ${NAME,,} would you like to install?" \
+		--ok-button "Install" \
+		--cancel-button "Go Back" \
+		$LINES $COLUMNS $(( $LINES - 12 )) \
+		'docker_install'    	'Install Docker' \
+		'nvidia_docker_install' 'Install Nvidia Docker (nvidia-container-toolkit only)' \
+		'nvidia_docker2_install'      'Install Nvidia Docker 2' \
+		3>&1 1>&2 2>&3)
+
+	# check exit status
+	if [ $? = 0 ]; then
+		echo_message header "Starting '$UPDATE' function..."
+		$UPDATE
+	else
+		# Cancelled
+		echo_message info "Docker Install cancelled."
+		main
+	fi
+}
