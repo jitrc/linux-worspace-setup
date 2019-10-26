@@ -2,65 +2,35 @@
 
 
 function auto_install {
-	echo_message title "Driver autoinstall..."
-	# Draw window
-	if (whiptail --title "autoinstall" --yesno "Driver autoinstall?" 8 56) then
-		# Update repository information
-		echo_message info 'autoinstall'
-		# Admin privileges
-		#superuser_do 'apt update -y -qq'
-		#echo_message success 'Repository information updated.'
-		sudo ubuntu-drivers autoinstall
-	else
-		# Cancelled
-		echo_message info "Installation of ${2} cancelled."
-		system_update
-	fi
+	sudo ubuntu-drivers autoinstall
 }
 
 function ubuntu_drivers_devices {
-	echo_message title "Adding gprahics ppa..."
-	sudo ubuntu-drivers devices
-	system_update
-	
+	sudo ubuntu-drivers devices 
 }
 
 
 function add_gprahics_ppa {
-	echo_message title "Adding gprahics ppa..."
 	sudo add-apt-repository ppa:graphics-drivers/ppa
-	sudo apt update
-	system_update
-	
+	sudo apt update -y -qq
 }
 
 
 function nvidia_430 {
-	echo_message title "Adding gprahics ppa..."
 	sudo apt install nvidia-driver-430
-	system_update
-	
+
 }
 
 function nvidia_418 {
-	echo_message title "Adding gprahics ppa..."
 	sudo apt install nvidia-driver-418
-	system_update
-	
 }
 
 function nvidia_390 {
-	echo_message title "Adding gprahics ppa..."
 	sudo apt install nvidia-driver-390
-	system_update
-	
 }
 
 function nvidia_384 {
-	echo_message title "Adding gprahics ppa..."
 	sudo apt install nvidia-384
-	system_update
-	
 }
 
 

@@ -1,0 +1,57 @@
+#!/bin/bash
+
+
+function add_cuda_ml_repo {
+	VERSION=$(lsb_release -rs) 
+	wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64/cuda-ubuntu${VERSION/./}.pin
+	sudo mv cuda-ubuntu${VERSION/./}.pin /etc/apt/preferences.d/cuda-repository-pin-600
+	sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64/7fa2af80.pub
+	echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64 /" |  sudo tee -a /etc/apt/sources.list.d/cuda.list > /dev/null 
+        echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu${VERSION/./}/x86_64 /" | sudo tee -a /etc/apt/sources.list.d/nvidia-ml.list  > /dev/null 
+	sudo apt update -y -qq
+}
+
+function cuda10_install {
+	#sudo apt-get -y install cuda
+	sudo apt-get install -y --no-install-recommends cuda-10-0
+	sudo apt-get install -y --no-install-recommends \
+		libcudnn7=7.6.0.64-1+cuda10.0 \
+		libcudnn7-dev=7.6.0.64-1+cuda10.0
+	sudo apt-mark hold libcudnn7 libcudnn7-dev
+}
+
+function cuda9_install {
+	sudo apt-get install -y --no-install-recommends cuda-9-0
+	sudo apt-get install -y  --no-install-recommends \
+		libcudnn7=7.6.0.64-1+cuda9.0  \
+		libcudnn7-dev=7.6.0.64-1+cuda9.0
+	sudo apt-mark hold libcudnn7 libcudnn7-dev 
+}
+
+
+function install_cuda {
+	# install
+	echo_message title "Starting CUDA installation..."
+	# Draw window
+	UPDATE=$(eval `resize` && whiptail \
+		--notags \
+		--title "Install $NAME" \
+		--menu "\nWhat ${NAME,,} would you like to install?" \
+		--ok-button "Install" \
+		--cancel-button "Go Back" \
+		$LINES $COLUMNS $(( $LINES - 12 )) \
+		'add_cuda_ml_repo'   	'Add Apt Sources for CUDA and Nvidia ML' \
+		'cuda10_install'   	'Install CUDA 10 and cudnn7_6' \
+		'cuda9_install'   	'Install CUDA 9 and cudnn7_6' \
+		3>&1 1>&2 2>&3)
+
+	# check exit status
+	if [ $? = 0 ]; then
+		echo_message header "Starting '$UPDATE' function..."
+		$UPDATE
+	else
+		# Cancelled
+		echo_message info "CUDA installation cancelled."
+		main
+	fi
+}

@@ -39,8 +39,9 @@ function main {
 		--cancel-button "Quit" \
 		$LINES $COLUMNS $(( $LINES - 12 )) \
 		'system_update'         'Perform system updates' \
-		'install_drivers'       'Install Drivers like Gprahics' \
+		'install_drivers'       'Install Drivers' \
 		'install_docker'        'Install Docker' \
+		'install_cuda'          'Install CUDA' \
 		'install_favs'          'Install preferred applications' \
 		'install_favs_dev'      'Install preferred development tools' \
 		'install_favs_utils'    'Install preferred utilities' \

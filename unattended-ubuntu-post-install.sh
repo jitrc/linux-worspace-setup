@@ -11,6 +11,10 @@ function main {
     docker_install
     nvidia_docker_install
 
+    #'install_cuda'          'Install CUDA' \
+    add_cuda_ml_repo
+    cuda10_install
+
     #'install_favs'          'Install preferred applications' \
     #'install_favs_dev'      'Install preferred development tools' \
     #'install_favs_utils'    'Install preferred utilities' \
