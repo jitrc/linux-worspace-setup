@@ -1,2 +1,6 @@
-git
+git-core
+gitg
 x11-apps
+build-essential
+cmake
+cmake-qt-gui
