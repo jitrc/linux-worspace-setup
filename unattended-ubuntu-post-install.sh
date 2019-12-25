@@ -24,6 +24,8 @@ function main {
     #'install_snap_apps'     'Install Snap applications' \
     #'install_flatpak_apps'  'Install Flatpak applications' \
     #'install_thirdparty'    'Install third-party applications' \
+    import_apps_functions
+    install_vscode
     #'setup_dotfiles'        'Configure dotfiles' \
     #'system_configure'      'Configure system' \
     #'system_cleanup'        'Cleanup the system' \
