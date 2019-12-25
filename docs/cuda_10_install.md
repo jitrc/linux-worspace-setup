@@ -22,7 +22,7 @@ wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./
 sudo mv cuda-ubuntu1604.pin /etc/apt/preferences.d/cuda-repository-pin-600
 sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64/7fa2af80.pub
 #sudo add-apt-repository "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64/ /"
-echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64 /" >  sudo tee -a /etc/apt/sources.list.d/cuda.list > /dev/null 
+echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${VERSION/./}/x86_64 /" |  sudo tee /etc/apt/sources.list.d/cuda.list  > /dev/null
 
 sudo apt-get update
 sudo apt-get -y install cuda
@@ -47,7 +47,7 @@ Install Cudnn
 #sudo dpkg -i nvidia-machine-learning-repo-*.deb
 
 
-echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu${VERSION/./}/x86_64 /" > /etc/apt/sources.list.d/nvidia-ml.list
+echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu${VERSION/./}/x86_64 /"  |  sudo tee  /etc/apt/sources.list.d/nvidia-ml.list> /dev/null
 
 sudo apt-get update
 apt-cache show libcudnn7 | grep Version
@@ -66,6 +66,7 @@ sudo apt-get install nvinfer-runtime-trt-repo-ubuntu1604-5.0.2-ga-cuda10.0
 sudo apt-get install -y --no-install-recommends \
 libnvinfer5=5.1.5-1+cuda10.0  \
 libnvinfer-dev=5.1.5-1+cuda10.0
+sudo apt-mark hold libnvinfer5 libnvinfer-dev
 ```
 
 Test
